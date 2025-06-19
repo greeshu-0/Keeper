@@ -1,9 +1,14 @@
 import React from "react";
-function Note(props) {
+function Note({ items, onDelete }) {
   return (
-    <div className="note">
-      <h1>{props.title}</h1>
-      <p>{props.content}</p>
+    <div>
+      {items.map((item, index) => (
+        <div className="note" key={index}>
+          <h1>{item.title}</h1>
+          <p>{item.content}</p>
+          <button onClick={()=>onDelete(index)}>DELETE</button>
+        </div>
+      ))}
     </div>
   );
 }
