@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import Note from "./Note";
+import AddIcon from "@mui/icons-material/Add";
+import Fab from "@mui/material/Fab";
+import Zoom from "@mui/material/Zoom";
 
 function CreateArea() {
   let [note, setNote] = useState({
@@ -7,6 +10,7 @@ function CreateArea() {
     content: "",
   });
   let [list, addToList] = useState([]);
+  let [isClicked, setClick] = useState(false);
   function handleAddNote(event) {
     let { name, value } = event.target;
     setNote((preValue) => ({
@@ -17,29 +21,40 @@ function CreateArea() {
   function handleAddNoteToList() {
     addToList((prevList) => [...prevList, note]);
     setNote({ title: "", content: "" });
+    setClick(false);
   }
-  function handleDeleteNote(id){
-    addToList((prevList)=>prevList.filter((_,index)=>index!==id));
+  function handleClick() {
+    setClick(true);
+  }
+  function handleDeleteNote(id) {
+    addToList((prevList) => prevList.filter((_, index) => index !== id));
   }
   return (
     <div>
-      <form>
-        <input
-          name="title"
-          placeholder="Title"
-          value={note.title}
-          onChange={handleAddNote}
-        />
+      <form className="create-note">
+        <div style={{ display: isClicked ? "block" : "none" }}>
+          <input
+            name="title"
+            placeholder="Title"
+            value={note.title}
+            onChange={handleAddNote}
+          />
+        </div>
         <textarea
           name="content"
           placeholder="Take a note..."
-          rows="3"
+          rows={isClicked? 3 : 1}
           value={note.content}
           onChange={handleAddNote}
+          onClick={handleClick}
         />
-        <button type="button" onClick={handleAddNoteToList}>Add</button>
+        <Zoom in={true}>
+          <Fab type="button" onClick={handleAddNoteToList}>
+            <AddIcon />
+          </Fab>
+        </Zoom>
       </form>
-      <Note items={list} onDelete={handleDeleteNote}/>
+      <Note items={list} onDelete={handleDeleteNote} />
     </div>
   );
 }
